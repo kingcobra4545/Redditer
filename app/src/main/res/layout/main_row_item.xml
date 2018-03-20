@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false"
+    android:descendantFocusability="blocksDescendants">
+
+
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+<FrameLayout
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:scaleType="fitXY"
+            android:background="@android:color/background_dark"
+            app:srcCompat="@android:drawable/ic_dialog_info"
+            android:visibility="visible"
+            android:focusable="false" />
+        <View
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+        android:background="@drawable/trending_gradient_shape"/>
+
+</FrameLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:textSize="24sp"
+            android:text="@string/vertical_ellipsis"
+            android:background="@android:color/transparent"
+            android:id="@+id/options_button_on_image"
+            android:clickable="true"/>
+
+
+        <TextView
+            android:id="@+id/news_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="160dp"
+            android:focusable="false"
+            android:maxLines="2"
+            android:text="@string/title"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/news_source_and_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/news_title"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:focusable="false"
+            android:maxLines="1"
+            android:maxLength="40"
+            android:text="@string/title"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:focusable="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:focusable="false">
+
+
+            <TextView
+                android:id="@+id/news_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/desc"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/news_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/author"
+                android:textSize="12sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:visibility="gone"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
