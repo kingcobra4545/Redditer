@@ -19,9 +19,7 @@ import com.possystems.kingcobra.redditer.DebuggingTools.Logger;
 import com.possystems.kingcobra.redditer.R;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 
@@ -38,7 +36,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txtTitle, txtDesc, txtAuthor, txtSourceAndTime;
+        TextView txtHeader,txtSubHeader, txtDesc, txtTimePosterAt;
         TextView txtType;
         TextView txtVersion, vehicleUsed;
         ImageView info;
@@ -62,28 +60,6 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         Logger.i(TAG, "Adapter Called" + "\n Data Size - > " + data.size());
 
     }
-    /*@Override
-    public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
-    {
-
-        int pos=(Integer) v.getTag();
-        Logger.i(TAG, "pos -- " + pos);
-        Logger.i(TAG, "position -- " + position);
-        // Get Person "behind" the clicked item
-        //Person p = (Person) myListView.getItemAtPosition(position);
-
-        // Logger the fields to check if we got the info we want
-        //Logger.i("SomeTag", "Persons name: " + p.name);
-        //Logger.i("SomeTag", "Persons id : " + p.person_id);
-
-        // Do something with the data. For example, passing them to a new Activity
-
-        *//*Intent i = new Intent(MainActivity.this, NewActivity.class);
-        i.putExtra("person_id", p.person_id);
-        i.putExtra("person_name", p.name);
-
-        MainActivity.this.startActivity(i);*//*
-    }*/
     @Override
     public void onClick(View v) {
 
@@ -138,10 +114,10 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.main_row_item, parent, false);
-            viewHolder.txtTitle = (TextView) convertView.findViewById(R.id.news_title);
-            viewHolder.txtDesc = (TextView) convertView.findViewById(R.id.news_desc);
-            viewHolder.txtAuthor = (TextView) convertView.findViewById(R.id.news_author);
-            viewHolder.txtSourceAndTime= (TextView) convertView.findViewById(R.id.news_source_and_time);
+            viewHolder.txtHeader = (TextView) convertView.findViewById(R.id.header);
+            viewHolder.txtDesc = (TextView) convertView.findViewById(R.id.desc);
+            viewHolder.txtSubHeader = (TextView) convertView.findViewById(R.id.sub_header);
+            viewHolder.txtTimePosterAt= (TextView) convertView.findViewById(R.id.time_posted);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.imageView);
             viewHolder.optionButton = (Button) convertView.findViewById(R.id.options_button_on_image);
             viewHolder.url = "";
@@ -156,155 +132,33 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
+        viewHolder.txtHeader.setText(dataModel.getHeader());
+        viewHolder.txtHeader.setTextColor(Color.WHITE);
 
-        //Logger.i(TAG, "\nsetting as follows - >  " + dataModel.getTitle() + "\n" + dataModel.getDescription());
-        viewHolder.txtTitle.setText(dataModel.getTitle());
-        //viewHolder.txtAuthor.setText("- " + dataModel.getAuthor());
-        viewHolder.txtSourceAndTime.setText(dataModel.getAuthor() + " • " + getTimeDifference(dataModel.getPublishedAT()));
-        viewHolder.txtAuthor.setTextColor(Color.BLACK);
         viewHolder.txtDesc.setText(dataModel.getDescription());
-        viewHolder.txtDesc.setTextColor(Color.BLACK);
-        viewHolder.url = dataModel.getUrl();
-  /*      viewHolder.optionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                v.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showPopupMenu(v);
-                    }
-                });
+        viewHolder.txtDesc.setTextColor(Color.WHITE);
 
+        viewHolder.txtSubHeader.setText(dataModel.getSubHeader());
+        viewHolder.txtSubHeader.setTextColor(Color.WHITE);
 
-
+        viewHolder.txtTimePosterAt.setText(dataModel.getTimePostedAt());
+        viewHolder.txtTimePosterAt.setTextColor(Color.WHITE);
+        Log.i(TAG, "Loading up image from - > " +dataModel.getImageURL());
+        String imageUrl = dataModel.getImageURL();
+        if(imageUrl!=null){
+            imageUrl = imageUrl.replaceAll("\\s","");
+            if(!imageUrl.isEmpty() && !imageUrl.equals("") && !imageUrl.equals(" ")) {
+                Log.i(TAG,  " image URL is ->" + imageUrl + "<--");
+                Picasso.with(mContext).load(imageUrl).into(viewHolder.info);
             }
-
-            private void showPopupMenu(View v) {
-
-                PopupMenu menu = new PopupMenu(mContext, v);
-                menu.getMenuInflater().inflate(R.menu.option_menu_each_item_in_list, menu.getMenu());
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Log.i(TAG, "item clicked - >   " + item.getTitle());
-                        return false;
-                    }
-                });
-                menu.show();
-            }
-        });*/
-
-        /*MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) menu.getMenu(), viewHolder.info);
-        menuHelper.setForceShowIcon(true);
-        menuHelper.show();*/
-
-      /*  if(dataModel.getAuthor()==null)
-            viewHolder.txtAuthor.setVisibility(View.GONE);
-        if(dataModel.getTitle()==null)
-            viewHolder.txtTitle.setVisibility(View.GONE);
-        if(dataModel.getDescription()==null)
-            viewHolder.txtDesc.setVisibility(View.GONE);*/
-        try {
-            Logger.i(TAG, "for image url - >>" + dataModel.getImageURL());
-            Picasso.with(mContext).load(dataModel.getImageURL()).into(viewHolder.info);
-           /* PopupMenu menu = new PopupMenu(getContext(), viewHolder.info);
-            menu.inflate(R.menu.option_menu_each_item_in_list);
-            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    Log.i(TAG, "item clicked - >   " + item.getTitle());
-                    return false;
-                }
-            });*/
-
-            /*Picasso.with(mContext).load(dataModel.getImageURL()).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    assert viewHolder.info != null;
-                    viewHolder.info.setImageBitmap(bitmap);
-                    Palette.from(bitmap)
-                            .generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    Palette.Swatch textSwatch = palette.getVibrantSwatch();
-                                    if (textSwatch == null) {
-                                        //Toast.makeText(mContext, "Null swatch :(", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                    //viewHolder.txtTitle.setTextColor(textSwatch.getBodyTextColor());
-                                    //viewHolder.txtTitle.setTextColor(palette.getLightMutedColor(Color.BLACK));
-                                    viewHolder.txtTitle.setTextColor(Color.WHITE);
-
-                                }
-                            });
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });*/
-
-
         }
-        catch (Exception e)
-        {
-            Logger.i(TAG, "for image url - >>" + dataModel.getImageURL());
 
-            e.printStackTrace();
-        }
+
         Logger.i(TAG, "get view finished");
         return convertView;
     }
 
-    private String getTimeDifference(String publishedAT) {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date pubDate = null;
-        try {
-            pubDate = sdf.parse(publishedAT);
-
-            Long pubTimeDiffToNow = - pubDate.getTime() + System.currentTimeMillis();
-            Long pubHours = pubTimeDiffToNow/(1000 * 60 * 60);
-            Long mins = pubTimeDiffToNow % (1000*60*60);
-            if(pubHours<1)
-                if (mins>59 || mins<1) {
-                    Log.i(TAG, " Hours - " + pubHours + "   mins - " + mins  );
-                    return "Sometime Ago";
-                }
-                else
-                    return mins.toString()+"m";
-            else if (pubHours>24)
-            {
-                Log.i(TAG, " Hours - " + pubHours + "   mins - " + mins  );
-                return String.valueOf(pubHours/24) + "d";
-            }
-            else
-                return pubHours.toString()+"h";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    /*private void getThumbNailFromPhotoLocation(final String photoLocation, final ImageView thumbNailImageView) {
-        new Thread( new Runnable() {
-            @Override
-            public void run() {
-                Logger.i(TAG, "Compression being");
-                final int THUMBSIZE = 64;
-                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoLocation), THUMBSIZE, THUMBSIZE);
-                Logger.i(TAG, "Compression end");
-                imageLoader.DisplayImage();
-                thumbNailImageView.setImageBitmap(ThumbImage);
-            }
-        }).start();
 
 
-    }*/
+
 }

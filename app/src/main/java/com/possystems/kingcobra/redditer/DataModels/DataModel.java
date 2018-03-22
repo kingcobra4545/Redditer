@@ -16,22 +16,22 @@ public class DataModel implements Serializable {
 
     //dataModels.add(new DataModel("Apple Pie", "Android 1.0", "1","September 23, 2008"));
     public DataModel(){}
-<<<<<<< Updated upstream
+/*<<<<<<< Updated upstream
     public  DataModel(String header, String subHeader, String headerIconImageURL, String timePostedAt, String postSourcedFrom, String title){
-=======
+=======*/
     public  DataModel(String header, String subHeader, String headerIconImageURL,
                       String timePostedAt, String postSourcedFrom, String description){
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
         this.header = header;
         this.subHeader = subHeader;
         this.headerIconImageURL = headerIconImageURL;
         this.timePostedAt = timePostedAt;
         this.postSourcedFrom = postSourcedFrom;
-<<<<<<< Updated upstream
+/*<<<<<<< Updated upstream
         this.title = title;
-=======
+=======*/
         this.description = description;
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
     }
     public void setImageURL(String imageURL){
@@ -105,11 +105,11 @@ public class DataModel implements Serializable {
     }
 
     public String getImageURL() {
-<<<<<<< Updated upstream
+/*<<<<<<< Updated upstream
         return imageURL;
-=======
+=======*/
         return headerIconImageURL;
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
     }
     public String getPublishedAT() {
         return publishedAT;
