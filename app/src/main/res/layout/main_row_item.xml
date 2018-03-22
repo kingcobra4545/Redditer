@@ -47,7 +47,11 @@
 
 
         <TextView
+<<<<<<< Updated upstream
             android:id="@+id/news_title"
+=======
+            android:id="@+id/header"
+>>>>>>> Stashed changes
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -55,20 +59,32 @@
             android:layout_marginTop="160dp"
             android:focusable="false"
             android:maxLines="2"
+<<<<<<< Updated upstream
             android:text="@string/title"
+=======
+            android:text="@string/header"
+>>>>>>> Stashed changes
             android:textColor="@color/colorPrimaryDark"
             android:textSize="22sp"
             android:textStyle="bold" />
         <TextView
+<<<<<<< Updated upstream
             android:id="@+id/news_source_and_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/news_title"
+=======
+            android:id="@+id/sub_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+>>>>>>> Stashed changes
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:focusable="false"
             android:maxLines="1"
             android:maxLength="40"
+<<<<<<< Updated upstream
             android:text="@string/title"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -111,5 +127,31 @@
 
         </LinearLayout>
     </LinearLayout>
+=======
+            android:text="@string/sub_header"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/time_posted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/three_h"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/desc"
+            android:textSize="15sp" />
+
+
+    </RelativeLayout>
+
+>>>>>>> Stashed changes
 
 </LinearLayout>
