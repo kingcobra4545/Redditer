@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
 
-        d = new ArrayList<>();
+        d = new ArrayList<>();//
         list = (ListView) findViewById(R.id.list);
         dataModelFromRest = makeRestAPICall(list);
         DataModel d1 = new DataModel("header",
