@@ -2,12 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:background="@android:color/background_light">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,14 +62,15 @@
         <TextView
             android:id="@+id/main_description"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Sample Description" />
 
         <ImageView
             android:id="@+id/main_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="150dp"
+            android:layout_marginBottom="15dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,11 +86,10 @@
 
                 <ImageView
                     android:id="@+id/up_arrow"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="5dp"
-                    android:background="@android:color/background_light"
                     app:srcCompat="@drawable/ic_arrow_upward_black_24dp" />
 
                 <TextView
@@ -95,8 +101,8 @@
 
                 <ImageView
                     android:id="@+id/down_arrow"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/ic_arrow_downward_black_24dp" />
             </LinearLayout>
@@ -110,12 +116,12 @@
 
                 <ImageView
                     android:id="@+id/comment_icon"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="5dp"
                     android:background="@android:color/background_light"
-                    app:srcCompat="@drawable/ic_comment_black_24dp" />
+                    app:srcCompat="@drawable/ic_comment_black" />
 
                 <TextView
                     android:id="@+id/comment_number"
@@ -148,4 +154,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

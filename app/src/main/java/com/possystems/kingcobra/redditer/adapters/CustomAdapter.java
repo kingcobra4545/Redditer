@@ -2,7 +2,6 @@ package com.possystems.kingcobra.redditer.adapters;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
 
-        super(context, R.layout.main_row_item, data);
+        super(context, R.layout.activity_main_reddit, data);
         this.dataSet = data;
         this.mContext=context;
         Logger.i(TAG, "Adapter Called" + "\n Data Size - > " + data.size());
@@ -113,14 +112,14 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.main_row_item, parent, false);
+            convertView = inflater.inflate(R.layout.activity_main_reddit, parent, false);
             viewHolder.txtHeader = (TextView) convertView.findViewById(R.id.header);
-            viewHolder.txtDesc = (TextView) convertView.findViewById(R.id.desc);
+            viewHolder.txtDesc = (TextView) convertView.findViewById(R.id.main_description);
             viewHolder.txtSubHeader = (TextView) convertView.findViewById(R.id.sub_header);
-            viewHolder.txtTimePosterAt= (TextView) convertView.findViewById(R.id.time_posted);
-            viewHolder.info = (ImageView) convertView.findViewById(R.id.imageView);
-            viewHolder.optionButton = (Button) convertView.findViewById(R.id.options_button_on_image);
-            viewHolder.url = "";
+//            viewHolder.txtTimePosterAt= (TextView) convertView.findViewById(R.id.time_posted);
+            viewHolder.info = (ImageView) convertView.findViewById(R.id.main_image);
+//            viewHolder.optionButton = (Button) convertView.findViewById(R.id.options_button_on_image);
+//            viewHolder.url = "";
             result=convertView;
 
             convertView.setTag(viewHolder);
@@ -133,16 +132,18 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         result.startAnimation(animation);
         lastPosition = position;
         viewHolder.txtHeader.setText(dataModel.getHeader());
-        viewHolder.txtHeader.setTextColor(Color.WHITE);
+//        viewHolder.txtHeader.setTextColor(Color.WHITE);
 
         viewHolder.txtDesc.setText(dataModel.getDescription());
-        viewHolder.txtDesc.setTextColor(Color.WHITE);
+//        viewHolder.txtDesc.setTextColor(Color.WHITE);
 
-        viewHolder.txtSubHeader.setText(dataModel.getSubHeader());
-        viewHolder.txtSubHeader.setTextColor(Color.WHITE);
+        viewHolder.txtSubHeader.setText(
+                dataModel.getSubHeader() + " • " + dataModel.getPublishedAT() + " • "
+        );
+//        viewHolder.txtSubHeader.setTextColor(Color.WHITE);
 
-        viewHolder.txtTimePosterAt.setText(dataModel.getTimePostedAt());
-        viewHolder.txtTimePosterAt.setTextColor(Color.WHITE);
+//        viewHolder.txtTimePosterAt.setText(dataModel.getTimePostedAt());
+//        viewHolder.txtTimePosterAt.setTextColor(Color.WHITE);
         Log.i(TAG, "Loading up image from - > " +dataModel.getImageURL());
         String imageUrl = dataModel.getImageURL();
         if(imageUrl!=null){
