@@ -48,7 +48,9 @@ public class RedditJsonResponseParser {
                         articles.getImageURL(),
                         articles.getTimePublishedAt(),
                         articles.getTitle(),
-                        articles.getDescription());
+                        articles.getDescription(),
+                        articles.getLikes(),
+                        articles.getID());
                 dataModelArrayList.add(dataModel);
                 if(i<3) Log.i(TAG, articles.getHeader() + " " + articles.getDescription() + " " + articles.getSubHeader());
 

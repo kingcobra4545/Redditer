@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
  * Created by KingCobra on 24/11/17.
  */
 
-public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener{
+public class CustomAdapter extends ArrayAdapter<DataModel> {
     String TAG = "CustomAdapter";
 
     private ArrayList<DataModel> dataSet;
@@ -35,7 +33,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txtHeader,txtSubHeader, txtDesc, txtTimePosterAt;
+        TextView txtHeader,txtSubHeader, txtDesc, txtTimePosterAt, txtLikes;
         TextView txtType;
         TextView txtVersion, vehicleUsed;
         ImageView info;
@@ -59,23 +57,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         Logger.i(TAG, "Adapter Called" + "\n Data Size - > " + data.size());
 
     }
-    @Override
-    public void onClick(View v) {
 
-        int position=(Integer) v.getTag();
-        Logger.i(TAG, "pos -- " + position);
-        Object object= getItem(position);
-        DataModel dataModel=(DataModel)object;
-
-        switch (v.getId())
-        {
-            case R.layout.main_row_item:
-                //((MainActivity) mContext).openCameraForActivityResultAnotherMethod2((Integer) v.getTag());
-                Logger.i(TAG, "tag--" + v.getTag());
-
-                break;
-        }
-    }
 
     private int lastPosition = -1;
 
@@ -116,6 +98,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
             viewHolder.txtHeader = (TextView) convertView.findViewById(R.id.header);
             viewHolder.txtDesc = (TextView) convertView.findViewById(R.id.main_description);
             viewHolder.txtSubHeader = (TextView) convertView.findViewById(R.id.sub_header);
+            viewHolder.txtLikes = (TextView) convertView.findViewById(R.id.num_of_likes);
 //            viewHolder.txtTimePosterAt= (TextView) convertView.findViewById(R.id.time_posted);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.main_image);
 //            viewHolder.optionButton = (Button) convertView.findViewById(R.id.options_button_on_image);
@@ -128,13 +111,14 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+        /*Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        result.startAnimation(animation);*/
         lastPosition = position;
         viewHolder.txtHeader.setText(dataModel.getHeader());
 //        viewHolder.txtHeader.setTextColor(Color.WHITE);
 
         viewHolder.txtDesc.setText(dataModel.getDescription());
+        viewHolder.txtLikes.setText(dataModel.getLikes());
 //        viewHolder.txtDesc.setTextColor(Color.WHITE);
 
         viewHolder.txtSubHeader.setText(

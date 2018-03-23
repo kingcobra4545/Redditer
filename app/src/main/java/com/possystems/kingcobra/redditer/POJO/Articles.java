@@ -22,16 +22,25 @@ public class Articles {
     private String description;
     private String header_icon_url;
     private String time_posted_at;
+    private String likes;
     private String updatedTime;
     private String query_class;
     private String image_size;
     private String query;
-    private String id;
+    private int id;
     private String imageSize;
 
 
+    public String getID(){
 
+            return String.valueOf(id);
 
+    }
+    public String getLikes(){
+        if(likes!=null)
+            return likes;
+        return "";
+    }
     public String getTitle(){
         if(title!=null)
             return title;

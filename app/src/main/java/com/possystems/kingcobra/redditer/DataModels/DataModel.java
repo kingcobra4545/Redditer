@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public class DataModel implements Serializable {
 
-    String header, subHeader,headerIconImageURL,timePostedAt,postSourcedFrom, title;
+    String header, subHeader,headerIconImageURL,timePostedAt,postSourcedFrom, title,  id;
     String description;
     String author;
     String url, imageURL;
-    String publishedAT;
+    String publishedAT, likes;
 
     //dataModels.add(new DataModel("Apple Pie", "Android 1.0", "1","September 23, 2008"));
     public DataModel(){}
@@ -20,13 +20,15 @@ public class DataModel implements Serializable {
     public  DataModel(String header, String subHeader, String headerIconImageURL, String timePostedAt, String postSourcedFrom, String title){
 =======*/
     public  DataModel(String header, String subHeader, String headerIconImageURL,
-                      String timePostedAt, String postSourcedFrom, String description){
+                      String timePostedAt, String postSourcedFrom, String description, String likes, String id){
 //>>>>>>> Stashed changes
         this.header = header;
         this.subHeader = subHeader;
         this.headerIconImageURL = headerIconImageURL;
         this.timePostedAt = timePostedAt;
         this.postSourcedFrom = postSourcedFrom;
+        this.likes = likes;
+        this.id = id;
 /*<<<<<<< Updated upstream
         this.title = title;
 =======*/
@@ -54,6 +56,12 @@ public class DataModel implements Serializable {
         this.author = author;
 
     }*/
+    public String getID() {
+        return id;
+    }
+    public String getLikes() {
+        return likes;
+    }
     public String getHeader() {
         return header;
     }
@@ -117,4 +125,6 @@ public class DataModel implements Serializable {
     /*public  void setCategory(String category){
         this.category = category;
     }*/
+
+    public void setLikes(String likes){this.likes = likes;}
 }

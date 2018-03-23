@@ -13,7 +13,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.possystems.kingcobra.redditer.DataModels.DataModel;
 import com.possystems.kingcobra.redditer.JsonHandling.RedditJsonResponseParser;
+import com.possystems.kingcobra.redditer.MainActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -106,4 +108,46 @@ public class CustomVolley {
     }
 
 
+    public JSONObject sendLikeRequest(final DataModel dataModel, final ListView list, String id, final String likes, String url  ) {
+//        {"id":"4","likes":"1"}
+        String jsonTobeSent = "{\"id\":\"" + id + "\",\"likes\":\"" + 1 + "\"}";
+        Log.i(TAG, "json being sent is --->>" + jsonTobeSent + "<--");
+
+        Log.i(TAG, "Making a http req using volley");
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = null;
+        JSONObject data = null;
+        try {
+            data = new JSONObject(jsonTobeSent);
+            Log.i(TAG, "Jsoned - > " +  data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+            request = new JsonObjectRequest(
+                    Request.Method.POST,url, data,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i(TAG, "Response after push - > " +  response);
+                            MainActivity m = new MainActivity();
+                            m.revertLike(list, response, dataModel);
+                            pushResponse = response;
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            MainActivity m = new MainActivity();
+                            m.revertLike(list, dataModel);
+                        }
+                    })
+            {
+
+            };
+
+        queue.add(request);
+        return pushResponse;
+    }
 }
