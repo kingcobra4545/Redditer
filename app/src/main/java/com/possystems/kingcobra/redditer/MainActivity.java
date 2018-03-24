@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long viewId = view.getId();
-                DataModel dataModel;
+                DataModel dataModel;//
                 CustomAdapter adapter;
                 if (viewId == R.id.up_arrow) {
                     dataModel = (DataModel) parent.getItemAtPosition(position);
