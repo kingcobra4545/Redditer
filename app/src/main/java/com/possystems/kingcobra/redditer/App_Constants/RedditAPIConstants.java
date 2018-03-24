@@ -12,5 +12,7 @@ public class RedditAPIConstants {
 
     public final static String REDDIT_APP_CONSTANTS_LIKE = "like";
     public final static String REDDIT_APP_CONSTANTS_DISLIKE = "dislike";
+    public final static String REDDIT_APP_CONSTANTS_ADD_ARTICLE = "Add Article";
+
 
 }

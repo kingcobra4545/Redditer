@@ -21,42 +21,34 @@ import com.possystems.kingcobra.redditer.adapters.CustomAdapter;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
-
+    WeakReference<MainActivity> weakReference;
+    WeakReference<ListView> weakReferenceList;
     String TAG = "MainActivity";
     Context context;
     CustomAdapter adapter;
-    ArrayList<DataModel> d, dataModelFromRest;
+    ArrayList<DataModel>  dataModelFromRest;
     ListView list;
-    VerticalViewPager verticalViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context = getApplicationContext();
+        weakReference = new WeakReference<>(this);
+        weakReferenceList = new WeakReference<>(list);
+        makeRestAPICall();
 
-        d = new ArrayList<>();
-        adapter = new CustomAdapter(d, context, this);
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
-
-        dataModelFromRest = makeRestAPICall(list);
-
-
+        list = findViewById(R.id.list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long viewId = view.getId();
-                DataModel dataModel = null;
-                CustomAdapter adapter = null;
-
+                DataModel dataModel;
+                CustomAdapter adapter;
                 if (viewId == R.id.up_arrow) {
-//                    Log.i(TAG, "up arrow clicked for item - > " + position +"\nID - > " );
                     dataModel = (DataModel) parent.getItemAtPosition(position);
-//                    Log.i(TAG,"Header - > " +  dataModel.getHeader());
                     dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
                     adapter = (CustomAdapter) list.getAdapter();
                     adapter.notifyDataSetChanged();
@@ -67,53 +59,38 @@ public class MainActivity extends AppCompatActivity  {
                     adapter = (CustomAdapter) list.getAdapter();
                     adapter.notifyDataSetChanged();
                     likeOrDislikeThisItem(dataModel, RedditAPIConstants.REDDIT_APP_CONSTANTS_DISLIKE);
-                    /*Log.i(TAG, "down arrow clicked for item - > " + position + "\nat view id - > " + view.getId() +
-                            "\nID - > " +id + "tag - > " + view.getTag());*/
-
                 } else {
                     Log.i(TAG, "list view item clicked - > " + position);
                 }
             }
         });
-
-
     }
 
     private void likeOrDislikeThisItem(DataModel dataModel, String likeOrDislike) {
-
-        CustomVolley customVolley = new CustomVolley(context, list);
-        customVolley.sendLikeRequest(likeOrDislike, dataModel, list,dataModel.getID(), dataModel.getLikes(), RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PUSH_END_POINT_PARAMETER_LIKE);
-
+        CustomVolley customVolley = new CustomVolley( weakReference, weakReferenceList);
+        customVolley.sendLikeRequest(likeOrDislike, dataModel, RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PUSH_END_POINT_PARAMETER_LIKE);
     }
-
-    private ArrayList<DataModel> makeRestAPICall(ListView list) {
-        ArrayList<DataModel> dataModel = new ArrayList<>();
-        CustomVolley customVolley = new CustomVolley(context, list);
+    private void makeRestAPICall() {
+        CustomVolley customVolley = new CustomVolley( weakReference, weakReferenceList);
         customVolley.makeRequest(RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PULL_END_POINT_PARAMETER);
-
-        return dataModel;
     }
 
 
-    public void notifyAdapter(ArrayList<DataModel> dataModelFromRest, Context context, ListView list) {
-        adapter = new CustomAdapter(dataModelFromRest, context, this);
-
+    public void notifyAdapter(ArrayList<DataModel> dataModelFromRest, Context context, WeakReference<ListView> weakReferenceList) {
+        adapter = new CustomAdapter(dataModelFromRest, context);
+        ListView list = weakReferenceList.get();
         list.setAdapter(adapter);
-
     }
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if(item.toString().equals("Add Article")){
+        if(item.toString().equals(RedditAPIConstants.REDDIT_APP_CONSTANTS_ADD_ARTICLE)){
             Intent addArticleActivity = new Intent(MainActivity.this, AddArticleActivity.class);
             startActivityForResult(addArticleActivity,1);
         }
-
     return true;
     }
 

@@ -1,7 +1,6 @@
 package com.possystems.kingcobra.redditer.JsonHandling;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -20,25 +19,23 @@ import java.util.ArrayList;
  */
 
 public class RedditJsonResponseParser {
-    Context context;
-    String response;
-    ListView list;
-    String TAG = "RedditJsonResponseParser";
+    private  Context context;
+    private  String response;
+    private String TAG = "RedditJsonResponseParser";
+    private WeakReference<ListView> weakReferenceList;
     public RedditJsonResponseParser(){}
-    public RedditJsonResponseParser(Context context, String response, ListView list){
-        this.context = context;
+    public RedditJsonResponseParser( String response, WeakReference<MainActivity> weakReference, WeakReference<ListView> weakReferenceList){
+        this.context = weakReference.get();
         this.response = response;
-        this.list = list;
+        this.weakReferenceList = weakReferenceList;
     }
 
     public ArrayList<DataModel> responseParser(){
-        WeakReference<MainActivity> weakReference = null;
+
         Gson gson = new Gson();
         ArrayList<DataModel> dataModelArrayList = new ArrayList<>();
         DataModel dataModel;
         try {
-            /*String jsonInString = "{'name' : 'mkyong'}";
-            Staff staff = gson.fromJson(jsonInString, Staff.class);*/
             JSONArray arrayOfElements = new JSONArray(response);
             for (int i=0;i<arrayOfElements.length();i++){
                 Articles articles = gson.fromJson( arrayOfElements.get(i).toString(), Articles.class);
@@ -52,21 +49,14 @@ public class RedditJsonResponseParser {
                         articles.getLikes(),
                         articles.getID());
                 dataModelArrayList.add(dataModel);
-                if(i<3) Log.i(TAG, articles.getHeader() + " " + articles.getDescription() + " " + articles.getSubHeader());
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, dataModelArrayList.toString());
-
         MainActivity m = new MainActivity();
-        m.notifyAdapter(dataModelArrayList, context,list);
-
+        WeakReference<MainActivity> weakReference  = new WeakReference<MainActivity>(m);
+        weakReference.get().notifyAdapter(dataModelArrayList, context, weakReferenceList);
         return dataModelArrayList;
-
-    }
-    public  void noResponseHandler(){
 
     }
 }

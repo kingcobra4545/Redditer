@@ -18,8 +18,8 @@ import com.possystems.kingcobra.redditer.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -27,22 +27,22 @@ import java.util.HashMap;
  */
 
 public class CustomVolley {
-    JSONObject pushResponse;
-    ArrayList<DataModel> dataModel = new ArrayList<>();
-    Context context;
+    private ArrayList<DataModel> dataModel = new ArrayList<>();
+    private Context context;
+    private String TAG = "CustomVolley";
+    private WeakReference<MainActivity> weakReference;
+    private WeakReference<ListView> weakReferenceList;
     ListView list;
-    String TAG = "CustomVolley";
     public CustomVolley(Context context){
         this.context = context;
     }
-    public CustomVolley(Context context, ListView list){
-        this.context = context;
-        this.list = list;
+    public CustomVolley( WeakReference<MainActivity> weakReference, WeakReference<ListView> weakReferenceList){
+        this.context = weakReference.get();
+        this.weakReference = weakReference;
+        this.weakReferenceList = weakReferenceList;
+        this.list = weakReferenceList.get();
     }
-
-
-
-    public ArrayList<DataModel> makeRequest(String url){
+    public void makeRequest(String url){
 
         Log.i(TAG, "Making a http req using volley");
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -50,34 +50,21 @@ public class CustomVolley {
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
-
                     @Override
                     public void onResponse(String response) {
-
                         Log.i(TAG, "Got the JSON bud" + "\n - >" + response );
-                        if(list!=null) {
-                            RedditJsonResponseParser affiliateURLJsonParser = new RedditJsonResponseParser(context, response, list);
-                            dataModel = affiliateURLJsonParser.responseParser();
-                        }
-                        else {
-                            Log.i(TAG, "Json sent, response is  - > " + response);
-                        }
+                        RedditJsonResponseParser affiliateURLJsonParser = new RedditJsonResponseParser(response, weakReference, weakReferenceList);
+                        dataModel = affiliateURLJsonParser.responseParser();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "No JSON for you");
-                RedditJsonResponseParser affiliateURLJsonParser = new RedditJsonResponseParser();
-                affiliateURLJsonParser.noResponseHandler();
             }
-        }){
-
-        };
+        }){};
         queue.add(stringRequest);
-        return dataModel;
     }
-
-    public JSONObject sendRequest(JSONObject data, String url){
+    public void sendRequest(JSONObject data, String url){
         Log.i(TAG, "data going -> " + data);
         Log.i(TAG, "data going to url -> " + url);
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -87,29 +74,20 @@ public class CustomVolley {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i(TAG, "Response after push - > " +  response);
-                        pushResponse = response;
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //...
-                    }
-                })
+                    public void onErrorResponse(VolleyError error) {}})
         {
 
         };
         queue.add(request);
-        return pushResponse;
-    }
-
-    private void writeDataToDB(ArrayList<HashMap<String, String>> mainList) {
-
     }
 
 
-    public JSONObject sendLikeRequest(final String likeOrDislike, final DataModel dataModel, final ListView list, String id, final String likes, String url  ) {
-//        {"id":"4","likes":"1"}
+    public void sendLikeRequest(final String likeOrDislike, final DataModel dataModel, String url  ) {
+        String id = dataModel.getID();
         String jsonTobeSent = null;
         if(likeOrDislike.equals("like"))
             jsonTobeSent = "{\"id\":\"" + id + "\",\"likes\":\"" + 1 + "\"}";
@@ -144,11 +122,6 @@ public class CustomVolley {
                                     MainActivity m = new MainActivity();
                                     m.revertLike(true,list, response, dataModel);
                                 }
-
-
-
-                            pushResponse = response;
-
                         }
                     },
                     new Response.ErrorListener() {
@@ -161,8 +134,6 @@ public class CustomVolley {
             {
 
             };
-
         queue.add(request);
-        return pushResponse;
     }
 }

@@ -5,17 +5,6 @@ package com.possystems.kingcobra.redditer.POJO;
  */
 
 public class Articles {
-    //{"sub_header": "qwe",
-    // "description": "qwdwqd",
-    // "time_posted_at": "qwdqwe",
-    // "header_icon_url": "qwewqe",
-    // "title": "dqwd",
-    // "updated_time": "2018-03-22 00:12:43.668658",
-    // "header": "wqer",
-    // "query_class": null,
-    // "image_size": "qwdwq",
-    // "query": null,
-    // "id": 1}
     private String header;
     private String sub_header;
     private String title;

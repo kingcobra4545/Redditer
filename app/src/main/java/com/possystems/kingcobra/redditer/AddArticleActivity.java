@@ -51,7 +51,7 @@ public class AddArticleActivity extends AppCompatActivity {
                 obj.setTitle(" ");
                 obj.setUpdatedTime(" ");
                 obj.setQueryClass(" ");
-                obj.setImageSize("large");
+                obj.setImageSize(" ");
                 obj.setQuery(" ");
 
                 // 2. Java object to JSON, and assign to a String
@@ -65,7 +65,6 @@ public class AddArticleActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //finish();
             }
         });
 
