@@ -23,7 +23,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
+
     String TAG = "MainActivity";
     Context context;
     CustomAdapter adapter;
@@ -38,48 +39,50 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         d = new ArrayList<>();
-        adapter = new CustomAdapter(d, context);
+        adapter = new CustomAdapter(d, context, this);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
 
         dataModelFromRest = makeRestAPICall(list);
-        d = dataModelFromRest;
-        adapter.notifyDataSetChanged();
-
 
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "POsition-> " + position);
-                DataModel dataModel = (DataModel) parent.getItemAtPosition(position);
-                Log.i(TAG, dataModel.getHeader());
-                dataModel.getLikes();
-                dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
-                CustomAdapter adapter = (CustomAdapter) list.getAdapter();
-                adapter.notifyDataSetChanged();
-                boolean success;
-                 likeThisItem(dataModel);
-                /*if (!success) {
-                    Log.i(TAG, "Reverting Likes to previous value");
+                long viewId = view.getId();
+                DataModel dataModel = null;
+                CustomAdapter adapter = null;
+
+                if (viewId == R.id.up_arrow) {
+//                    Log.i(TAG, "up arrow clicked for item - > " + position +"\nID - > " );
+                    dataModel = (DataModel) parent.getItemAtPosition(position);
+//                    Log.i(TAG,"Header - > " +  dataModel.getHeader());
+                    dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
+                    adapter = (CustomAdapter) list.getAdapter();
+                    adapter.notifyDataSetChanged();
+                    likeOrDislikeThisItem(dataModel, RedditAPIConstants.REDDIT_APP_CONSTANTS_LIKE);
+                } else if (viewId == R.id.down_arrow) {
+                    dataModel = (DataModel) parent.getItemAtPosition(position);
                     dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
-                }*/
+                    adapter = (CustomAdapter) list.getAdapter();
+                    adapter.notifyDataSetChanged();
+                    likeOrDislikeThisItem(dataModel, RedditAPIConstants.REDDIT_APP_CONSTANTS_DISLIKE);
+                    /*Log.i(TAG, "down arrow clicked for item - > " + position + "\nat view id - > " + view.getId() +
+                            "\nID - > " +id + "tag - > " + view.getTag());*/
+
+                } else {
+                    Log.i(TAG, "list view item clicked - > " + position);
+                }
             }
         });
 
-        //adapterSet();
+
     }
 
-    private void likeThisItem(DataModel dataModel) {
-        JSONObject response = null;
+    private void likeOrDislikeThisItem(DataModel dataModel, String likeOrDislike) {
+
         CustomVolley customVolley = new CustomVolley(context, list);
-        customVolley.sendLikeRequest( dataModel, list,dataModel.getID(), dataModel.getLikes(), RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PUSH_END_POINT_PARAMETER_LIKE);
-        /*Gson gson = new Gson();
-        LikesResponse likesResponse = gson.fromJson( response.toString(), LikesResponse.class);
-        likesResponse.getID();
-        likesResponse.getLikes();*/
-        /*if(!dataModel.getLikes().equals(likesResponse.getLikes())) return false;
-        return true;*/
+        customVolley.sendLikeRequest(likeOrDislike, dataModel, list,dataModel.getID(), dataModel.getLikes(), RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PUSH_END_POINT_PARAMETER_LIKE);
 
     }
 
@@ -91,20 +94,12 @@ public class MainActivity extends AppCompatActivity {
         return dataModel;
     }
 
-    /*private void adapterSet() {
-        CustomAdapter customAdapter;
-
-
-    }*/
 
     public void notifyAdapter(ArrayList<DataModel> dataModelFromRest, Context context, ListView list) {
-        adapter = new CustomAdapter(dataModelFromRest, context);
-//        list = (ListView) findViewById(R.id.list);
-        /*if(adapter!=null) list.setAdapter(adapter);
-        else Log.i(TAG, "Adapter is null");*/
+        adapter = new CustomAdapter(dataModelFromRest, context, this);
+
         list.setAdapter(adapter);
-//        ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
-//        adapter.notifyDataSetChanged();
+
     }
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -122,26 +117,39 @@ public class MainActivity extends AppCompatActivity {
     return true;
     }
 
-    public void revertLike(ListView list, JSONObject response, DataModel dataModel) {
+    public void revertLike(boolean like,ListView list, JSONObject response, DataModel dataModel) {
         Gson gson = new Gson();
         LikesResponse likesResponse = gson.fromJson( response.toString(), LikesResponse.class);
-        likesResponse.getID();
-        likesResponse.getLikes();
-        if(!dataModel.getLikes().equals(likesResponse.getLikes())) {
-            Log.i(TAG, "Reverting Likes to previous value because values dont match");
+        if(!dataModel.getLikes().equals(likesResponse.getLikes()) && like) {
+            Log.i(TAG, "Reverting Likes to previous value because values don't match");
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
+            CustomAdapter adapter = (CustomAdapter) list.getAdapter();
+            adapter.notifyDataSetChanged();
+        }
+        else if ((!dataModel.getLikes().equals(likesResponse.getDislikes())) && !like){
+            Log.i(TAG, "Reverting disLikes to previous value because values don't match");
+//            Log.i(TAG, "Like in device -> " + dataModel.getLikes());
+//            Log.i(TAG, "Likes from server -> " + likesResponse.getDislikes());
+
+            dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
             CustomAdapter adapter = (CustomAdapter) list.getAdapter();
             adapter.notifyDataSetChanged();
         }
 
     }
 
-    public void revertLike(ListView list, DataModel dataModel) {
+    public void revertLike(String likeOrDislike,ListView list, DataModel dataModel) {
         Log.i(TAG, "Reverting Likes to previous value because error occured");
-        dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
+
+        if(likeOrDislike.equals("like"))
+            dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
+        else
+            dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
         CustomAdapter adapter = (CustomAdapter) list.getAdapter();
         adapter.notifyDataSetChanged();
 
     }
+
+
 }
 

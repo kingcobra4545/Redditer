@@ -1,7 +1,9 @@
 package com.possystems.kingcobra.redditer.adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.possystems.kingcobra.redditer.DataModels.DataModel;
@@ -24,19 +27,37 @@ import java.util.ArrayList;
  * Created by KingCobra on 24/11/17.
  */
 
-public class CustomAdapter extends ArrayAdapter<DataModel> {
+public class CustomAdapter extends ArrayAdapter<DataModel>  {
     String TAG = "CustomAdapter";
+
 
     private ArrayList<DataModel> dataSet;
     Context mContext;
 
+
+
+
+
+    @Override
+    public long getItemId(int position) {
+        Log.i(TAG, "get Item id - > " + position);
+        return super.getItemId(position);
+
+    }
+
+    @Nullable
+    @Override
+    public DataModel getItem(int position) {
+
+        return super.getItem(position);
+    }
 
     // View lookup cache
     private static class ViewHolder {
         TextView txtHeader,txtSubHeader, txtDesc, txtTimePosterAt, txtLikes;
         TextView txtType;
         TextView txtVersion, vehicleUsed;
-        ImageView info;
+        ImageView info, upVoteImageButton, downVoteImageButton, smallIcon;
         String url;
         Button optionButton;
     }
@@ -49,34 +70,18 @@ public class CustomAdapter extends ArrayAdapter<DataModel> {
         return instance;
     }*/
 
-    public CustomAdapter(ArrayList<DataModel> data, Context context) {
+    public CustomAdapter(ArrayList<DataModel> data, Context context, Activity activity) {
 
         super(context, R.layout.activity_main_reddit, data);
         this.dataSet = data;
         this.mContext=context;
         Logger.i(TAG, "Adapter Called" + "\n Data Size - > " + data.size());
 
+
     }
 
-
-    private int lastPosition = -1;
-
-    public interface OnDataChangeListener{
-        public void onDataChanged(DataModel dataModel);
-    }
-
-    OnDataChangeListener mOnDataChangeListener;
-    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){
-        mOnDataChangeListener = onDataChangeListener;
-    }
-    private void doButtonOneClickActions(DataModel dataModel) {
-
-        if(mOnDataChangeListener != null){
-            mOnDataChangeListener.onDataChanged(dataModel);
-        }
-    }
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
 
 
@@ -90,6 +95,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> {
 
         final View result;
 
+
         if (convertView == null) {
 
             viewHolder = new ViewHolder();
@@ -101,6 +107,16 @@ public class CustomAdapter extends ArrayAdapter<DataModel> {
             viewHolder.txtLikes = (TextView) convertView.findViewById(R.id.num_of_likes);
 //            viewHolder.txtTimePosterAt= (TextView) convertView.findViewById(R.id.time_posted);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.main_image);
+            viewHolder.smallIcon = (ImageView) convertView.findViewById(R.id.small_icon_left_top);
+            viewHolder.upVoteImageButton = (ImageView) convertView.findViewById(R.id.up_arrow);
+            Log.i(TAG, "When CV = null DB ID - > " + dataModel.getID());
+            Log.i(TAG, "When CV = null UI ID - > " + position);
+            convertView.setTag(position);
+
+
+            viewHolder.downVoteImageButton = (ImageView) convertView.findViewById(R.id.down_arrow);
+            viewHolder.downVoteImageButton.setTag(position);
+
 //            viewHolder.optionButton = (Button) convertView.findViewById(R.id.options_button_on_image);
 //            viewHolder.url = "";
             result=convertView;
@@ -110,10 +126,28 @@ public class CustomAdapter extends ArrayAdapter<DataModel> {
             viewHolder = (ViewHolder) convertView.getTag();
             result=convertView;
         }
+        viewHolder.downVoteImageButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+                Log.i(TAG, "DownVote Item ID clicked --> "  + dataModel.getID()+ "\n at position - > " + position +
+                        "\n Button tag - >" + viewHolder.upVoteImageButton.getTag());
+
+            }
+        });
+        viewHolder.upVoteImageButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+                Log.i(TAG, "UpVote Item ID clicked --> "  + dataModel.getID()+ "\n at position - > " + position);
+
+            }
+        });
 
         /*Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);*/
-        lastPosition = position;
         viewHolder.txtHeader.setText(dataModel.getHeader());
 //        viewHolder.txtHeader.setTextColor(Color.WHITE);
 
@@ -122,27 +156,37 @@ public class CustomAdapter extends ArrayAdapter<DataModel> {
 //        viewHolder.txtDesc.setTextColor(Color.WHITE);
 
         viewHolder.txtSubHeader.setText(
-                dataModel.getSubHeader() + " • " + dataModel.getPublishedAT() + " • "
+                dataModel.getSubHeader() + " • " + dataModel.getPublishedAT()
         );
+
+
 //        viewHolder.txtSubHeader.setTextColor(Color.WHITE);
 
 //        viewHolder.txtTimePosterAt.setText(dataModel.getTimePostedAt());
 //        viewHolder.txtTimePosterAt.setTextColor(Color.WHITE);
-        Log.i(TAG, "Loading up image from - > " +dataModel.getImageURL());
-        String imageUrl = dataModel.getImageURL();
+//        Log.i(TAG, "Loading up image from - > " +dataModel.getMainImageURL());
+        String imageUrl = dataModel.getMainImageURL();
         if(imageUrl!=null){
             imageUrl = imageUrl.replaceAll("\\s","");
             if(!imageUrl.isEmpty() && !imageUrl.equals("") && !imageUrl.equals(" ")) {
-                Log.i(TAG,  " image URL is ->" + imageUrl + "<--");
-                Picasso.with(mContext).load(imageUrl).into(viewHolder.info);
+//                Log.i(TAG,  " image URL is ->" + imageUrl + "<--");
+                Picasso.with(mContext).load(imageUrl).fit().into(viewHolder.info);
             }
         }
-
+        imageUrl = dataModel.getHeaderIconImageURL();
+        if(imageUrl!=null){
+            imageUrl = imageUrl.replaceAll("\\s","");
+            if(!imageUrl.isEmpty() && !imageUrl.equals("") && !imageUrl.equals(" ")) {
+//                Log.i(TAG,  " image URL is ->" + imageUrl + "<--");
+                Picasso.with(mContext).load(imageUrl).fit().into(viewHolder.smallIcon);
+            }
+        }
+        Log.i(TAG, "When CV != null DB ID - > " + dataModel.getID());
+        Log.i(TAG, "When CV != null UI ID - > " + position);
 
         Logger.i(TAG, "get view finished");
         return convertView;
     }
-
 
 
 

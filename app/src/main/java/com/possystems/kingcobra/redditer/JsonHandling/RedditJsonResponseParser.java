@@ -45,7 +45,7 @@ public class RedditJsonResponseParser {
                 dataModel = new DataModel(
                         articles.getHeader(),
                         articles.getSubHeader(),
-                        articles.getImageURL(),
+                        articles.getImageURL(), articles.getMainImageURL(),
                         articles.getTimePublishedAt(),
                         articles.getTitle(),
                         articles.getDescription(),

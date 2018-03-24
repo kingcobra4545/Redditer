@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class DataModel implements Serializable {
 
-    String header, subHeader,headerIconImageURL,timePostedAt,postSourcedFrom, title,  id;
+    String header, subHeader,headerIconImageURL,timePostedAt,postSourcedFrom, title,  id,mainImageURL;
     String description;
     String author;
     String url, imageURL;
@@ -19,12 +19,13 @@ public class DataModel implements Serializable {
 /*<<<<<<< Updated upstream
     public  DataModel(String header, String subHeader, String headerIconImageURL, String timePostedAt, String postSourcedFrom, String title){
 =======*/
-    public  DataModel(String header, String subHeader, String headerIconImageURL,
+    public  DataModel(String header, String subHeader, String headerIconImageURL,String mainImageURL,
                       String timePostedAt, String postSourcedFrom, String description, String likes, String id){
 //>>>>>>> Stashed changes
         this.header = header;
         this.subHeader = subHeader;
         this.headerIconImageURL = headerIconImageURL;
+        this.mainImageURL = mainImageURL;
         this.timePostedAt = timePostedAt;
         this.postSourcedFrom = postSourcedFrom;
         this.likes = likes;
@@ -119,8 +120,15 @@ public class DataModel implements Serializable {
         return headerIconImageURL;
 //>>>>>>> Stashed changes
     }
+    public String getMainImageURL() {
+/*<<<<<<< Updated upstream
+        return imageURL;
+=======*/
+        return mainImageURL;
+//>>>>>>> Stashed changes
+    }
     public String getPublishedAT() {
-        return publishedAT;
+        return timePostedAt;
     }
     /*public  void setCategory(String category){
         this.category = category;

@@ -20,7 +20,7 @@ public class Articles {
     private String sub_header;
     private String title;
     private String description;
-    private String header_icon_url;
+    private String header_icon_url,main_image_url;
     private String time_posted_at;
     private String likes;
     private String updatedTime;
@@ -64,6 +64,11 @@ public class Articles {
     public String getImageURL(){
         if(header_icon_url!=null)
             return header_icon_url;
+        return "";
+    }
+    public String getMainImageURL(){
+        if(main_image_url!=null)
+            return main_image_url;
         return "";
     }
     public String getTimePublishedAt(){

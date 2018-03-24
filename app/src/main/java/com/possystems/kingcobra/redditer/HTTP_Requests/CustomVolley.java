@@ -108,9 +108,13 @@ public class CustomVolley {
     }
 
 
-    public JSONObject sendLikeRequest(final DataModel dataModel, final ListView list, String id, final String likes, String url  ) {
+    public JSONObject sendLikeRequest(final String likeOrDislike, final DataModel dataModel, final ListView list, String id, final String likes, String url  ) {
 //        {"id":"4","likes":"1"}
-        String jsonTobeSent = "{\"id\":\"" + id + "\",\"likes\":\"" + 1 + "\"}";
+        String jsonTobeSent = null;
+        if(likeOrDislike.equals("like"))
+            jsonTobeSent = "{\"id\":\"" + id + "\",\"likes\":\"" + 1 + "\"}";
+        else if(likeOrDislike.equals("dislike"))
+            jsonTobeSent = "{\"id\":\"" + id + "\",\"dislikes\":\"" + 1 + "\"}";
         Log.i(TAG, "json being sent is --->>" + jsonTobeSent + "<--");
 
         Log.i(TAG, "Making a http req using volley");
@@ -130,8 +134,19 @@ public class CustomVolley {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.i(TAG, "Response after push - > " +  response);
-                            MainActivity m = new MainActivity();
-                            m.revertLike(list, response, dataModel);
+//                            {"id":"3","dislikes":"3"}
+
+                                if(String.valueOf(response).contains("dislikes")){
+                                    MainActivity m = new MainActivity();
+                                    m.revertLike(false,list, response, dataModel);
+                                }
+                                else {
+                                    MainActivity m = new MainActivity();
+                                    m.revertLike(true,list, response, dataModel);
+                                }
+
+
+
                             pushResponse = response;
 
                         }
@@ -140,7 +155,7 @@ public class CustomVolley {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             MainActivity m = new MainActivity();
-                            m.revertLike(list, dataModel);
+                            m.revertLike(likeOrDislike, list, dataModel);
                         }
                     })
             {
