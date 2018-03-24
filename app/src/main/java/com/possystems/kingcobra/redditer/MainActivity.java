@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        list = findViewById(R.id.list);
         weakReference = new WeakReference<>(this);
         weakReferenceList = new WeakReference<>(list);
         makeRestAPICall();
 
-        list = findViewById(R.id.list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -124,9 +124,6 @@ public class MainActivity extends AppCompatActivity  {
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
         CustomAdapter adapter = (CustomAdapter) list.getAdapter();
         adapter.notifyDataSetChanged();
-
     }
-
-
 }
 

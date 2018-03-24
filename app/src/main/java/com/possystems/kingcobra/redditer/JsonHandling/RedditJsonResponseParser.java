@@ -21,9 +21,7 @@ import java.util.ArrayList;
 public class RedditJsonResponseParser {
     private  Context context;
     private  String response;
-    private String TAG = "RedditJsonResponseParser";
     private WeakReference<ListView> weakReferenceList;
-    public RedditJsonResponseParser(){}
     public RedditJsonResponseParser( String response, WeakReference<MainActivity> weakReference, WeakReference<ListView> weakReferenceList){
         this.context = weakReference.get();
         this.response = response;

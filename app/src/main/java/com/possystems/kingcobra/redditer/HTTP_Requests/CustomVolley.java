@@ -32,7 +32,7 @@ public class CustomVolley {
     private String TAG = "CustomVolley";
     private WeakReference<MainActivity> weakReference;
     private WeakReference<ListView> weakReferenceList;
-    ListView list;
+    private ListView list;
     public CustomVolley(Context context){
         this.context = context;
     }

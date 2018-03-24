@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.possystems.kingcobra.redditer.DataModels.DataModel;
-import com.possystems.kingcobra.redditer.DebuggingTools.Logger;
 import com.possystems.kingcobra.redditer.R;
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +34,6 @@ public class CustomAdapter extends ArrayAdapter<DataModel>  {
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
         super(context, R.layout.activity_main_reddit, data);
         this.mContext=context;
-        Logger.i(TAG, "Adapter Called" + "\n Data Size - > " + data.size());
     }
     @Override
     @NonNull
@@ -43,8 +41,6 @@ public class CustomAdapter extends ArrayAdapter<DataModel>  {
         // Get the data item for this position
         final DataModel dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        /*Logger.i(TAG, "get view called" + "\nfrom thread - > " +Thread.currentThread().getId() +
-                "\n For position" + position +  " category -- > " + dataModel.getTitle());*/
         final ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
             viewHolder = new ViewHolder();
