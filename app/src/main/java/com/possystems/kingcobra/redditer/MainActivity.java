@@ -83,16 +83,20 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void notifyAdapter(ArrayList<DataModel> dataModelFromRest, Context context, WeakReference<ListView> weakReferenceList) {
+        //Local method which updates the adapter with updated DataModel inturn updates the UI with the latest dataset
+        //Uses Weakreferences to update the initial listview object that was created upon launch of the activity
         adapter = new CustomAdapter(dataModelFromRest, context);
-        ListView list = weakReferenceList.get();
+        ListView list = weakReferenceList.get();//Gets the list object that was initially created using weakreference
         list.setAdapter(adapter);
     }
     public boolean onCreateOptionsMenu(Menu menu) {
+        //Called upon clicking three dots button on the taskbar of the app. Inflates the menu with the items included in menu_main xml file
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item) {
+        //The is a listener to the menu items, when the item clicked matches the string given the intended action will be performed
         if(item.toString().equals(RedditAPIConstants.REDDIT_APP_CONSTANTS_ADD_ARTICLE)){
             Intent addArticleActivity = new Intent(MainActivity.this, AddArticleActivity.class);
             startActivityForResult(addArticleActivity,1);
@@ -101,19 +105,17 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void revertLike(boolean like,ListView list, JSONObject response, DataModel dataModel) {
+        //Local method to revert Likes/Dislike(Upvotes/DownVotes) which was not received by the backend
         Gson gson = new Gson();
         LikesResponse likesResponse = gson.fromJson( response.toString(), LikesResponse.class);
         if(!dataModel.getLikes().equals(likesResponse.getLikes()) && like) {
-            Log.i(TAG, "Reverting Likes to previous value because values don't match");
+            //Reduce the number of votes/likes by 1 on local dataset if the like/upvote was not received by the backend
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
             CustomAdapter adapter = (CustomAdapter) list.getAdapter();
             adapter.notifyDataSetChanged();
         }
         else if ((!dataModel.getLikes().equals(likesResponse.getDislikes())) && !like){
-            Log.i(TAG, "Reverting disLikes to previous value because values don't match");
-//            Log.i(TAG, "Like in device -> " + dataModel.getLikes());
-//            Log.i(TAG, "Likes from server -> " + likesResponse.getDislikes());
-
+            //Increase the number of votes/likes by 1 on local dataset if the dislike/downvote was not received by the backend
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
             CustomAdapter adapter = (CustomAdapter) list.getAdapter();
             adapter.notifyDataSetChanged();
