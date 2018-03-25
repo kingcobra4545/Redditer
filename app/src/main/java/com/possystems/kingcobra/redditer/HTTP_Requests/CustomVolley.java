@@ -19,15 +19,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 
 /**
  * Created by KingCobra on 10/12/17.
  */
-
+//Custom class for making HTTP network requests to the backend server
 public class CustomVolley {
-    private ArrayList<DataModel> dataModel = new ArrayList<>();
+//    private ArrayList<DataModel> dataModel = new ArrayList<>();
     private Context context;
     private String TAG = "CustomVolley";
     private WeakReference<MainActivity> weakReference;
@@ -37,43 +36,40 @@ public class CustomVolley {
         this.context = context;
     }
     public CustomVolley( WeakReference<MainActivity> weakReference, WeakReference<ListView> weakReferenceList){
+        //Constructor to initialize weak reference variables from the calling class
         this.context = weakReference.get();
         this.weakReference = weakReference;
         this.weakReferenceList = weakReferenceList;
         this.list = weakReferenceList.get();
     }
-    public void makeRequest(String url){
-
-        Log.i(TAG, "Making a http req using volley");
+    public void makeRequest(String url){//Network request method to pull data from the backend server
+        //Initializing a Request queue
         RequestQueue queue = Volley.newRequestQueue(context);
 
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,//URL to which the request to be sent
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "Got the JSON bud" + "\n - >" + response );
+                    public void onResponse(String response) {//Method called on response from the server
                         RedditJsonResponseParser affiliateURLJsonParser = new RedditJsonResponseParser(response, weakReference, weakReferenceList);
-                        dataModel = affiliateURLJsonParser.responseParser();
+                        affiliateURLJsonParser.responseParser();//Response being passed to Json parser method
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(VolleyError error) {//Method called on when there is an error in response received
                 Log.i(TAG, "No JSON for you");
             }
         }){};
         queue.add(stringRequest);
     }
-    public void sendRequest(JSONObject data, String url){
-//        Log.i(TAG, "data going -> " + data);
-//        Log.i(TAG, "data going to url -> " + url);
+    public void sendRequest(JSONObject data, String url){//Method to push data to server, data is stored in object 'data' and to be pushed to URL stored in 'url' with HTTP method as 'POST'
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,url, data,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(TAG, "Response after push - > " +  response);
+                    public void onResponse(JSONObject response) {//Method called on response from the server
+                        //On response logic to be written here
                     }
                 },
                 new Response.ErrorListener() {
@@ -99,7 +95,6 @@ public class CustomVolley {
         JSONObject data = null;//Data that is added into the above object and sent over the network
         try {
             data = new JSONObject(jsonTobeSent);
-//            Log.i(TAG, "Jsoned - > " +  data);
         } catch (JSONException e) {
             e.printStackTrace();
         }

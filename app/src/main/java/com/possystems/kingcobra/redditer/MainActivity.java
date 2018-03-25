@@ -122,14 +122,15 @@ public class MainActivity extends AppCompatActivity  {
         }
 
     }
-
+    //Revert Likes/Upvotes or dislikes/DownVotes when there is an error in network request
     public void revertLike(String likeOrDislike,ListView list, DataModel dataModel) {
         Log.i(TAG, "Reverting Likes to previous value because error occured");
-
-        if(likeOrDislike.equals("like"))
+        //Reduce number of likes/upvotes by 1 if network request was made for like/upvote
+        if(likeOrDislike.equals(RedditAPIConstants.REDDIT_APP_CONSTANTS_LIKE))
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
-        else
+        else//Increase number of likes/upvotes by 1 if network request was made for dislike/down vote
             dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
+        //Notify the adapter of the change in dataset
         CustomAdapter adapter = (CustomAdapter) list.getAdapter();
         adapter.notifyDataSetChanged();
     }
