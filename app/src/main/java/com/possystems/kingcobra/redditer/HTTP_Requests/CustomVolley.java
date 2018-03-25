@@ -21,9 +21,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 
 
-/**
- * Created by KingCobra on 10/12/17.
- */
 //Custom class for making HTTP network requests to the backend server
 public class CustomVolley {
 //    private ArrayList<DataModel> dataModel = new ArrayList<>();
