@@ -23,8 +23,9 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-
+//MainActivity class which hosts the launcher activity
 public class MainActivity extends AppCompatActivity  {
+    //Weakreferences used to pass the reference of the class to another class
     WeakReference<MainActivity> weakReference;
     WeakReference<ListView> weakReferenceList;
     String TAG = "MainActivity";
@@ -39,21 +40,23 @@ public class MainActivity extends AppCompatActivity  {
         list = findViewById(R.id.list);
         weakReference = new WeakReference<>(this);
         weakReferenceList = new WeakReference<>(list);
-        makeRestAPICall();
+        makeRestAPICall();// Call local method to make REST API calls to backend
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            //Click Listener which is called upon clicking on a button on each UI row item
+            //This Listener picks up the id/position of the row item which the user clicked on and performs actions on that item
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long viewId = view.getId();
                 DataModel dataModel;//
                 CustomAdapter adapter;
-                if (viewId == R.id.up_arrow) {
-                    dataModel = (DataModel) parent.getItemAtPosition(position);
-                    dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));
-                    adapter = (CustomAdapter) list.getAdapter();
-                    adapter.notifyDataSetChanged();
-                    likeOrDislikeThisItem(dataModel, RedditAPIConstants.REDDIT_APP_CONSTANTS_LIKE);
-                } else if (viewId == R.id.down_arrow) {
+                if (viewId == R.id.up_arrow) {//UpArrow clicked, the button which means user has liked/upVoted the row item is clicked
+                    dataModel = (DataModel) parent.getItemAtPosition(position);//Get the data model of row item at the position where the click was fired
+                    dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) + 1));//Increment the number of likes associated with this row item which later on gets updated on UI also
+                    adapter = (CustomAdapter) list.getAdapter();//Get the adapter associated with the listview
+                    adapter.notifyDataSetChanged();//Notify the adapter that the dataset associated with it has updated and the UI also to updated with new dataset
+                    likeOrDislikeThisItem(dataModel, RedditAPIConstants.REDDIT_APP_CONSTANTS_LIKE);//Call local method to make network request to send data to backend that the row item is upvoted/downvoted by the user. Boolean parameter is passed to distinguish between upvotes and downvotes.
+                } else if (viewId == R.id.down_arrow) {//DownArrow clicked, the button which means user has disliked/downVoted the row item is clicked
                     dataModel = (DataModel) parent.getItemAtPosition(position);
                     dataModel.setLikes(String.valueOf(Integer.parseInt(dataModel.getLikes()) - 1));
                     adapter = (CustomAdapter) list.getAdapter();
@@ -66,11 +69,14 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    private void likeOrDislikeThisItem(DataModel dataModel, String likeOrDislike) {
+    private void likeOrDislikeThisItem(DataModel dataModel, String likeOrDislike) {//Local method to make REST calls to notify upvote/downvote to the backend
         CustomVolley customVolley = new CustomVolley( weakReference, weakReferenceList);
         customVolley.sendLikeRequest(likeOrDislike, dataModel, RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PUSH_END_POINT_PARAMETER_LIKE);
     }
     private void makeRestAPICall() {
+        //Use Volley library to make REST API backend calls, URL and its parameters are set @RedditAPIConstants class.
+        //Volley internally makes network calls on different thread and not on UI thread so the UI won't be blocked while making
+        //network calls
         CustomVolley customVolley = new CustomVolley( weakReference, weakReferenceList);
         customVolley.makeRequest(RedditAPIConstants.REDDIT_API_DEFAULT_END_POINT + RedditAPIConstants.REDDIT_API_PULL_END_POINT_PARAMETER);
     }
